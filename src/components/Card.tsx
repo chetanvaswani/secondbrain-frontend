@@ -5,12 +5,19 @@ import { CiTwitter } from "react-icons/ci";
 import { PiYoutubeLogoLight } from "react-icons/pi";
 import { FaLink } from "react-icons/fa6";
 
-
 interface cardProps { 
     type: "document" | "tweet" | "link" | "youtube",
     link: string,
     title: string,
     tags: string[]
+}
+
+interface tagProps {
+    title: string
+}
+
+interface embedingProps {
+    link: string
 }
 
 const cardIconsStyles = 'size-6 text-gray-400'
@@ -29,7 +36,7 @@ export default function Card({
     tags
 } : cardProps) {
     return (
-        <div className="w-72 h-96 bg-white rounded-2xl border-1 border-gray-200 text-black p-4 flex flex-col gap-4" >
+        <div className="w-72 h-fit bg-white rounded-2xl border-1 border-gray-200 text-black p-4 flex flex-col gap-4" >
             <div className="flex justify-between items-center">
                 <div className="flex items-center gap-3">
                     {cardType[type]}
@@ -40,9 +47,13 @@ export default function Card({
                     <RiDeleteBinLine className={cardIconsStyles} />
                 </div>
             </div>
-            <div className="max-h-52 overflow-hidden text-gray-600 font-light">
-                The best way to build a second brain app is to learn programming.
-                Learn MERN stack and then learn postgress and prisma and learn typescript.
+            <div className="overflow-hidden text-gray-600 font-light">
+                {
+                    type === "youtube" ? <YoutubeEmbeded link={link} /> :
+                    type === "tweet" ? <TwitterEmbeded /> : 
+                    type === 'link' ? false : 
+                    type === "document" ? false : false
+                }
             </div>
             <div className="flex justify-start gap-2 items-start overflow-x-auto">
                 {
@@ -56,16 +67,37 @@ export default function Card({
     )
 }
 
-interface tagProps {
-    title: string
-}
-
 function Tag({
     title
 } : tagProps){
     return (
         <div className="bg-purple-200 text-sm text-purple-600 px-3 py-1 w-fit rounded-xl font-light">
             #{title}
+        </div>
+    )
+}
+
+function YoutubeEmbeded({
+    link 
+} : embedingProps){ 
+    let parts = link.split('/')
+    const embed =  `https://www.youtube.com/embed/${parts[parts.length - 1].split('?')[0]}`
+
+    return (
+        <iframe className="h-full w-full rounded-lg" src={embed} title="YouTube video player"
+         frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        referrerPolicy="strict-origin-when-cross-origin" allowFullScreen>
+        </iframe>
+    )
+}
+
+function TwitterEmbeded(){
+    return (
+        <div className=" max-w-xs" >
+            <blockquote className="twitter-tweet">
+                <a href="https://twitter.com/elonmusk/status/1888088975656509575"></a>
+            </blockquote>
+            <script async src="https://platform.twitter.com/widgets.js"></script>
         </div>
     )
 }
