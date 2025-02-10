@@ -27,7 +27,7 @@ const cardType = {
     "tweet": <CiTwitter className='size-10 text-gray-600' />,
     "youtube": <PiYoutubeLogoLight className='size-11 text-gray-500' />,
     "link": <FaLink className='size-8 text-gray-500' />,
-}
+} 
 
 export default function Card({
     type,
@@ -36,7 +36,7 @@ export default function Card({
     tags
 } : cardProps) {
     return (
-        <div className="w-72 h-fit bg-white rounded-2xl border-1 border-gray-200 text-black p-4 flex flex-col gap-4" >
+        <div className="w-84 h-fit bg-white rounded-2xl border-1 border-gray-200 text-black p-4 flex flex-col gap-4" >
             <div className="flex justify-between items-center">
                 <div className="flex items-center gap-3">
                     {cardType[type]}
@@ -50,12 +50,12 @@ export default function Card({
             <div className="overflow-hidden text-gray-600 font-light">
                 {
                     type === "youtube" ? <YoutubeEmbeded link={link} /> :
-                    type === "tweet" ? <TwitterEmbeded /> : 
+                    type === "tweet" ? <TwitterEmbeded link={link} /> : 
                     type === 'link' ? false : 
                     type === "document" ? false : false
                 }
             </div>
-            <div className="flex justify-start gap-2 items-start overflow-x-auto">
+            <div className="flex justify-start gap-2 items-start flex-wrap ">
                 {
                     tags.map(title => <Tag title={title} key={title} />)
                 }
@@ -91,11 +91,15 @@ function YoutubeEmbeded({
     )
 }
 
-function TwitterEmbeded(){
+function TwitterEmbeded({
+    link
+}: embedingProps){
+    const embed = link.replace("x.com", "twitter.com")
+
     return (
         <div className=" max-w-xs" >
             <blockquote className="twitter-tweet">
-                <a href="https://twitter.com/elonmusk/status/1888088975656509575"></a>
+                <a href={embed}></a>
             </blockquote>
             <script async src="https://platform.twitter.com/widgets.js"></script>
         </div>

@@ -3,4 +3,5 @@
 @theme{
     --color-purple-200: #e0e7ff;
     --color-purple-600: #5046e4;
+    --color-black-50: rgba(0, 0, 0, 0.5);
 }
