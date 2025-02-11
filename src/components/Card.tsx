@@ -20,7 +20,7 @@ interface embedingProps {
     link: string
 }
 
-const cardIconsStyles = 'size-6 text-gray-400'
+const cardIconsStyles = 'size-6 text-gray-400 cursor-pointer'
 
 const cardType = {
     "document": <CgFileDocument className='size-8 text-gray-500' />,
@@ -36,15 +36,15 @@ export default function Card({
     tags
 } : cardProps) {
     return (
-        <div className="w-84 h-fit bg-white rounded-2xl border-1 border-gray-200 text-black p-4 flex flex-col gap-4" >
+        <div className="w-[31%] min-w-72 h-fit bg-white rounded-2xl border-1 border-gray-200 text-black p-4 flex flex-col gap-4" >
             <div className="flex justify-between items-center">
                 <div className="flex items-center gap-3">
                     {cardType[type]}
                     <p className="font-medium text-lg text-gray-600 leading-5">{title}</p>
                 </div>
                 <div className="flex gap-5">
-                    <IoShareSocialOutline className={cardIconsStyles} />
-                    <RiDeleteBinLine className={cardIconsStyles} />
+                    <IoShareSocialOutline className={`${cardIconsStyles} before:content-['select'] before:ml-2 before:text-black before:absolute before:top-1 before:left-1 before `} />
+                    <RiDeleteBinLine className={`${cardIconsStyles} before:content-['select'] before:ml-2 before:text-black before:absolute before:top-1 before:left-1 before `} />
                 </div>
             </div>
             <div className="overflow-hidden text-gray-600 font-light">

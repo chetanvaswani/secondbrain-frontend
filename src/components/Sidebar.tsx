@@ -40,7 +40,7 @@ export default function Sidebar(){
                 {
                     sidebarItems.map((item) => {
                         return ( 
-                            <SidebarItem name={item.name} icon={item.icon} />
+                            <SidebarItem name={item.name} key={item.name} icon={item.icon} />
                         )
                     })
                 }
