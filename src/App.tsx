@@ -6,6 +6,7 @@ import Sidebar from './components/Sidebar'
 import { IoShareSocialOutline } from "react-icons/io5";
 import { GoPlus } from "react-icons/go";
 import AddContentModal from "./components/AddContentModal";
+import ShareContentModal from './components/ShareContentModal'
 
 
 function App() {
@@ -15,11 +16,13 @@ function App() {
 }
 
 function Home(){
-  const [openModal, setOpenModal] = useState(false)
+  const [addContentModal, setAddContentModal] = useState(false)
+  const [shareContentModal, setShareContentModal] = useState(false)
 
   return (
       <div className='h-screen w-screen flex'>
-        <AddContentModal open={openModal} setOpen={setOpenModal} />
+        <AddContentModal open={addContentModal} setOpen={setAddContentModal} />
+        <ShareContentModal open={shareContentModal} setOpen={setShareContentModal} />
         <div className='h-full'> 
           <Sidebar />
         </div>
@@ -27,11 +30,15 @@ function Home(){
           <div className='w-full flex items-center justify-between p-10'>
             <div className='text-3xl font-semibold ' >All Notes</div>
               <div className='flex gap-5'>
-                <Button variant='secondary' startIcon={<IoShareSocialOutline className='size-6' />} size='lg' text='Share Brain' />
                 <div onClick={() => {
-                  setOpenModal(true)
+                    setShareContentModal(true)
+                  }} >
+                    <Button variant='secondary' startIcon={<IoShareSocialOutline className='size-6' />} size='lg' text='Share Brain' />
+                </div>
+                <div onClick={() => {
+                  setAddContentModal(true)
                 }} >
-                  <Button variant='primary' size='lg' startIcon={<GoPlus className='size-6' />} text='Add Content' />
+                    <Button variant='primary' size='lg' startIcon={<GoPlus className='size-6' />} text='Add Content' />
                 </div>
               </div>
             </div>
