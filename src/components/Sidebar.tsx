@@ -5,6 +5,8 @@ import { FaLink } from "react-icons/fa6";
 import { RiHashtag } from "react-icons/ri";
 import { LuBrain } from "react-icons/lu";
 import SidebarItem from "./SidebarItem";
+import Button from "./Button";
+import { TbLogout2 } from "react-icons/tb";
 
 const sidebarItems = [
     {
@@ -31,19 +33,24 @@ const sidebarItems = [
 
 export default function Sidebar(){
     return (
-        <div className=" h-full w-72 bg-white border-r-1 border-gray-200 py-2">
-            <div className="flex items-center p-2 gap-2">
-                <LuBrain className="size-10 fill text-purple-600 " />
-                <div className="text-2xl font-semibold" >Second Brain</div>
+        <div className=" h-full w-72 bg-white border-r-1 border-gray-200 py-2 flex flex-col justify-between ">
+            <div>
+                <div className="flex items-center p-2 gap-2">
+                    <LuBrain className="size-10 fill text-purple-600 " />
+                    <div className="text-2xl font-semibold" >Second Brain</div>
+                </div>
+                <div className="my-5">
+                    {
+                        sidebarItems.map((item) => {
+                            return ( 
+                                <SidebarItem name={item.name} key={item.name} icon={item.icon} />
+                            )
+                        })
+                    }
+                </div>
             </div>
-            <div className="my-5">
-                {
-                    sidebarItems.map((item) => {
-                        return ( 
-                            <SidebarItem name={item.name} key={item.name} icon={item.icon} />
-                        )
-                    })
-                }
+            <div className="py-2 px-5 w-full flex flex-col">
+                    <Button text="Logout" variant="primary" size="md" startIcon={<TbLogout2 />} />
             </div>
         </div>
     )

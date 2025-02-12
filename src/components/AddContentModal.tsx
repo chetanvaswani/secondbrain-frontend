@@ -9,14 +9,6 @@ interface AddContentModalInterface{
     setOpen: (value: boolean) => void
 }
 
-interface InputBoxPropsInterface {
-    title: string,
-    maxLength: number,
-    id?: string,
-    required? : boolean,
-    onChange?: (event?: React.ChangeEvent<HTMLInputElement>) => void
-}
-
 interface tagProps {
     title: string,
     onClick: () => void
@@ -27,18 +19,26 @@ export default function AddContentModal({
     setOpen,
 }: AddContentModalInterface){
     interface formDataInterface {
-        type: string,
+        type: "twitter" | "youtube" | "document" | "link",
         title: string,
         link: string,
         tags: string[]
     }
     const [formData, setFormData] = useState<formDataInterface>({
-        type: '',
+        type: 'twitter',
         title: '',
         link: '',
         tags: []
     })
-    // let timeout: any;
+    let timeout: any;
+
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+        clearTimeout(timeout)
+        timeout = setTimeout(() => {
+            setFormData({ ...formData, [e.target.name]: e.target.value });
+            console.log([e.target.name], e.target.value)
+        }, 500)
+    };
 
     return(
         <Modal title="Add Content to your Brain" open={open} setOpen={setOpen} >
@@ -49,14 +49,12 @@ export default function AddContentModal({
                     <option value="Document">Document</option>
                     <option value="Link">Link</option>
                 </select>
-                <InputBox title="Enter the title" maxLength={50} onChange={() => {
-
-                }} />
-                <InputBox title="Enter your Link" maxLength={50} onChange={() => {
-                    
-                }} />                  
+                <InputBox title="Enter the title" name="title" maxLength={50} onChange={handleInputChange} />
+                <InputBox title="Enter your Link" name="link" maxLength={100} onChange={handleInputChange} />                  
                 <div className="flex justify-between gap-3">
-                    <InputBox title="Enter a tag" id="tag-input" maxLength={50} />                            
+                    <InputBox title="Enter a tag" id="tag-input" maxLength={50} onKeyDown={() => {
+
+                    }} />                            
                     <Button variant="secondary" size="sm" text="" startIcon={<IoMdAdd />} onClick={() => {
                     // @ts-ignore
                     let value  = document.getElementById('tag-input').value
@@ -97,11 +95,21 @@ export default function AddContentModal({
                     }
                 </div>
                 <Button variant="primary" size="sm" text="Submit" onClick={() => {
-                    
+
                 }} />
             </div>
         </Modal>
     )
+}
+
+interface InputBoxPropsInterface {
+    title: string,
+    maxLength: number,
+    id?: string,
+    required? : boolean,
+    onChange?: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void,
+    onKeyDown?: () => void,
+    name?: string
 }
 
 function InputBox({
@@ -109,10 +117,14 @@ function InputBox({
     maxLength,
     id,
     onChange,
-    required
+    required,
+    onKeyDown,
+    name
 }: InputBoxPropsInterface){
     return (
-        <input id={id} autoComplete="off" placeholder={title} required={required ? true : false} className="w-full h-10 p-2 text-base border-1 border-gray-500 rounded-md" maxLength={maxLength} onChange={onChange} />
+        <input id={id} autoComplete="off" placeholder={title} required={required ? true : false}
+        className="w-full h-10 p-2 text-base border-1 border-gray-500 rounded-md"
+        maxLength={maxLength} onChange={onChange} onKeyDown={onKeyDown} name={name} />
     )
 }
 
