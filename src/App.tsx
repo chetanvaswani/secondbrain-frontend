@@ -16,7 +16,7 @@ function App() {
 }
 
 function Home(){
-  const [addContentModal, setAddContentModal] = useState(false)
+  const [addContentModal, setAddContentModal] = useState(true)
   const [shareContentModal, setShareContentModal] = useState(false)
 
   return (

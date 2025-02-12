@@ -3,7 +3,9 @@ interface ButtonProps {
     size: "sm" | "md" | "lg",
     text: string,
     startIcon?: any,
-    endIcon?: any
+    endIcon?: any,
+    onClick? : () => void,
+    type?: "submit" | "button"
 }
 
 const variantStyles = {
@@ -24,10 +26,12 @@ export default function Button({
     size,
     text,
     startIcon,
-    endIcon
+    endIcon,
+    onClick,
+    type
 }: ButtonProps){
     return (
-        <button className={`${variantStyles[variant]} ${defaultStyles} ${sizeStypes[size]}`}>
+        <button className={`${variantStyles[variant]} ${defaultStyles} ${sizeStypes[size]}`} onClick={onClick} type={type}>
             <div className="flex justify-center items-center gap-2">
                 {startIcon}
                 {text}

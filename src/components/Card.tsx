@@ -67,7 +67,7 @@ export default function Card({
     )
 }
 
-function Tag({
+export function Tag({
     title
 } : tagProps){
     return (
