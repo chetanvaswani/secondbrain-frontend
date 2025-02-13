@@ -9,11 +9,6 @@ interface AddContentModalInterface{
     setOpen: (value: boolean) => void
 }
 
-interface tagProps {
-    title: string,
-    onClick: () => void
-}
-
 export default function AddContentModal({
     open,
     setOpen,
@@ -36,14 +31,39 @@ export default function AddContentModal({
         clearTimeout(timeout)
         timeout = setTimeout(() => {
             setFormData({ ...formData, [e.target.name]: e.target.value });
-            console.log([e.target.name], e.target.value)
-        }, 500)
+            // console.log([e.target.name], e.target.value)
+        }, 250)
     };
+
+    const handleAddTag = () => {
+        // @ts-ignore
+        let value  = document.getElementById('tag-input').value.trim()
+        // @ts-ignore
+        document.getElementById('tag-input').value = ""
+        if (value.length === 0){
+            alert("Can not add empty tag")
+            return
+        }
+        if( formData.tags.includes(value) ){
+            alert("Can't add the same tag twice")
+            return
+        }
+        if ( value.includes(" ")){
+            alert("A tag can not have spaces in between")
+            return
+        }
+        setFormData({
+            ...formData,
+            tags: [...formData.tags, value]
+        })
+    }
 
     return(
         <Modal title="Add Content to your Brain" open={open} setOpen={setOpen} >
             <div className="flex flex-col m-1 my-5 gap-4">
-                <select name="type" id="type" className="w-full h-10 p-2 text-base border-1 appearance-none border-gray-500 rounded-md" >
+                <select name="type" id="type"
+                className="w-full h-10 p-2 text-base border-1 appearance-none border-gray-500 rounded-md"
+                onChange={handleInputChange}  >
                     <option value="Twitter">Twitter</option>
                     <option value="YouTube">YouTube</option>
                     <option value="Document">Document</option>
@@ -55,28 +75,7 @@ export default function AddContentModal({
                     <InputBox title="Enter a tag" id="tag-input" maxLength={50} onKeyDown={() => {
 
                     }} />                            
-                    <Button variant="secondary" size="sm" text="" startIcon={<IoMdAdd />} onClick={() => {
-                    // @ts-ignore
-                    let value  = document.getElementById('tag-input').value.trim()
-                    // @ts-ignore
-                    document.getElementById('tag-input').value = ""
-                    if (value.length === 0){
-                        alert("Can not add empty tag")
-                        return
-                    }
-                    if( formData.tags.includes(value) ){
-                        alert("Can't add the same tag twice")
-                        return
-                    }
-                    if ( value.includes(" ")){
-                        alert("A tag can not have spaces in between")
-                        return
-                    }
-                    setFormData({
-                        ...formData,
-                        tags: [...formData.tags, value]
-                    })
-                }} />
+                    <Button variant="secondary" size="sm" text="" startIcon={<IoMdAdd />} onClick={handleAddTag} />
                 </div>
                 <div className="flex gap-2 flex-wrap ">
                     {
@@ -101,6 +100,7 @@ export default function AddContentModal({
                     else if (formData.type === "youtube" && !(formData.link.includes("youtu.be") || formData.link.includes("youtube.com"))){
                         alert("Not a valid YouTube Link")
                     }
+                    console.log(formData)
                 }} />
             </div>
         </Modal>
@@ -131,6 +131,11 @@ function InputBox({
         className="w-full h-10 p-2 text-base border-1 border-gray-500 rounded-md"
         maxLength={maxLength} onChange={onChange} onKeyDown={onKeyDown} name={name} />
     )
+}
+
+interface tagProps {
+    title: string,
+    onClick: () => void
 }
 
 export function Tag({
