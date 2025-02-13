@@ -43,7 +43,7 @@ export default function AddContentModal({
     return(
         <Modal title="Add Content to your Brain" open={open} setOpen={setOpen} >
             <div className="flex flex-col m-1 my-5 gap-4">
-                <select name="type" id="type" className="w-full h-10 p-2 text-base border-1 border-gray-500 rounded-md" >
+                <select name="type" id="type" className="w-full h-10 p-2 text-base border-1 appearance-none border-gray-500 rounded-md" >
                     <option value="Twitter">Twitter</option>
                     <option value="YouTube">YouTube</option>
                     <option value="Document">Document</option>
@@ -57,7 +57,9 @@ export default function AddContentModal({
                     }} />                            
                     <Button variant="secondary" size="sm" text="" startIcon={<IoMdAdd />} onClick={() => {
                     // @ts-ignore
-                    let value  = document.getElementById('tag-input').value
+                    let value  = document.getElementById('tag-input').value.trim()
+                    // @ts-ignore
+                    document.getElementById('tag-input').value = ""
                     if (value.length === 0){
                         alert("Can not add empty tag")
                         return
@@ -74,8 +76,6 @@ export default function AddContentModal({
                         ...formData,
                         tags: [...formData.tags, value]
                     })
-                    // @ts-ignore
-                    document.getElementById('tag-input').value = ""
                 }} />
                 </div>
                 <div className="flex gap-2 flex-wrap ">
@@ -95,7 +95,12 @@ export default function AddContentModal({
                     }
                 </div>
                 <Button variant="primary" size="sm" text="Submit" onClick={() => {
-
+                    if (formData.type === "twitter" && !(formData.link.includes("x.com") || formData.link.includes("twitter.com"))){
+                        alert("Not a valid Twitter Link")
+                    }
+                    else if (formData.type === "youtube" && !(formData.link.includes("youtu.be") || formData.link.includes("youtube.com"))){
+                        alert("Not a valid YouTube Link")
+                    }
                 }} />
             </div>
         </Modal>
