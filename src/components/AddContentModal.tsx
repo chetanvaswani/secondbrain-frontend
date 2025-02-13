@@ -3,6 +3,7 @@ import { IoMdAdd } from "react-icons/io";
 import Modal from './Modal'
 import { useState } from "react";
 import { IoCloseOutline } from "react-icons/io5";
+import InputBox from './InputBox'
 
 interface AddContentModalInterface{
     open: boolean,
@@ -104,32 +105,6 @@ export default function AddContentModal({
                 }} />
             </div>
         </Modal>
-    )
-}
-
-interface InputBoxPropsInterface {
-    title: string,
-    maxLength: number,
-    id?: string,
-    required? : boolean,
-    onChange?: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void,
-    onKeyDown?: () => void,
-    name?: string
-}
-
-function InputBox({
-    title,
-    maxLength,
-    id,
-    onChange,
-    required,
-    onKeyDown,
-    name
-}: InputBoxPropsInterface){
-    return (
-        <input id={id} autoComplete="off" placeholder={title} required={required ? true : false}
-        className="w-full h-10 p-2 text-base border-1 border-gray-500 rounded-md"
-        maxLength={maxLength} onChange={onChange} onKeyDown={onKeyDown} name={name} />
     )
 }
 

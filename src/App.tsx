@@ -1,4 +1,6 @@
 import './App.css';
+import Login from "./components/Login";
+import Signup from './components/Signup'
 import { useState } from 'react';
 import Button from './components/Button';
 import Card from './components/Card';
@@ -6,12 +8,19 @@ import Sidebar from './components/Sidebar'
 import { IoShareSocialOutline } from "react-icons/io5";
 import { GoPlus } from "react-icons/go";
 import AddContentModal from "./components/AddContentModal";
-import ShareContentModal from './components/ShareContentModal'
+import ShareContentModal from './components/ShareContentModal';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 
 function App() {
   return (
-    <Home />
+    <Router>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
+      </Routes>
+    </Router>
   )
 }
 
