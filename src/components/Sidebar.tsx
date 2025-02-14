@@ -7,6 +7,7 @@ import { LuBrain } from "react-icons/lu";
 import SidebarItem from "./SidebarItem";
 import Button from "./Button";
 import { TbLogout2 } from "react-icons/tb";
+import { useNavigate } from "react-router-dom";
 
 const sidebarItems = [
     {
@@ -32,6 +33,8 @@ const sidebarItems = [
 ]
 
 export default function Sidebar(){
+    const navigate = useNavigate()
+
     return (
         <div className=" h-full w-72 bg-white border-r-1 border-gray-200 py-2 flex flex-col justify-between ">
             <div>
@@ -50,7 +53,10 @@ export default function Sidebar(){
                 </div>
             </div>
             <div className="py-2 px-5 w-full flex flex-col">
-                    <Button text="Logout" variant="primary" size="md" startIcon={<TbLogout2 />} />
+                    <Button text="Logout" variant="primary" size="md" startIcon={<TbLogout2 />} onClick={() => {
+                        localStorage.removeItem("token");
+                        navigate('/login')
+                    }} />
             </div>
         </div>
     )

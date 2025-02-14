@@ -5,15 +5,22 @@ import { CiTwitter } from "react-icons/ci";
 import { PiYoutubeLogoLight } from "react-icons/pi";
 import { FaLink } from "react-icons/fa6";
 
+
+interface tag {
+    id: number,
+    title: string,
+    contentId: number
+}
+
 interface cardProps { 
     type: "document" | "tweet" | "link" | "youtube",
     link: string,
     title: string,
-    tags: string[]
+    tags: tag[]
 }
 
 interface tagProps {
-    title: string
+    title: string,
 }
 
 interface embedingProps {
@@ -57,7 +64,14 @@ export default function Card({
             </div>
             <div className="flex justify-start gap-2 items-start flex-wrap ">
                 {
-                    tags.map(title => <Tag title={title} key={title} />)
+                   tags && tags?.length > 0 ? tags.map((tag) => {
+                    console.log(tag)
+                        return (
+                            <div key={tag.id}>
+                                <Tag title={tag.title} />
+                            </div>
+                        )
+                    }) : false
                 }
             </div>
             <div className="text-gray-500 text-sm font-extralight">
@@ -68,7 +82,7 @@ export default function Card({
 }
 
 export function Tag({
-    title
+    title,
 } : tagProps){
     return (
         <div className="bg-purple-200 text-sm text-purple-600 px-3 py-1 w-fit rounded-xl font-light">
