@@ -4,22 +4,24 @@ import Modal from './Modal'
 import { useState } from "react";
 import { IoCloseOutline } from "react-icons/io5";
 import InputBox from './InputBox'
+import axios from "axios";
 
 interface AddContentModalInterface{
     open: boolean,
     setOpen: (value: boolean) => void
 }
 
+interface formDataInterface {
+    type: "twitter" | "youtube" | "document" | "link",
+    title: string,
+    link: string,
+    tags: string[]
+}
+
 export default function AddContentModal({
     open,
     setOpen,
 }: AddContentModalInterface){
-    interface formDataInterface {
-        type: "twitter" | "youtube" | "document" | "link",
-        title: string,
-        link: string,
-        tags: string[]
-    }
     const [formData, setFormData] = useState<formDataInterface>({
         type: 'twitter',
         title: '',
@@ -27,6 +29,7 @@ export default function AddContentModal({
         tags: []
     })
     let timeout: any;
+    const URL = "http://localhost:6001/api/v1/content"
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         clearTimeout(timeout)
@@ -59,16 +62,52 @@ export default function AddContentModal({
         })
     }
 
+    const handleAddContent = () => {
+        const token = localStorage.getItem("token")
+        if (formData.type === "twitter" && !(formData.link.includes("x.com") || formData.link.includes("twitter.com"))){
+            alert("Not a valid Twitter Link")
+        }
+        else if (formData.type === "youtube" && !(formData.link.includes("youtu.be") || formData.link.includes("youtube.com"))){
+            alert("Not a valid YouTube Link")
+        }
+        if (!token){
+            console.log("You are not authorized")
+        }
+        console.log({
+            "type": formData.type,
+            "title": formData.title,
+            "link": formData.link,
+            "tags": formData.tags
+        })
+        axios.post(URL, {
+            "type": formData.type,
+            "title": formData.title,
+            "link": formData.link,
+            "tags": formData.tags
+        }, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        }).then((res) => {
+            if (res.data.success){
+                // alert("Successfully added new content")
+                setOpen(false)
+            }
+        }).catch((err) => {
+            console.log(err)
+        })
+    }
+
     return(
         <Modal title="Add Content to your Brain" open={open} setOpen={setOpen} >
             <div className="flex flex-col m-1 my-5 gap-4">
                 <select name="type" id="type"
                 className="w-full h-10 p-2 text-base border-1 appearance-none border-gray-500 rounded-md"
                 onChange={handleInputChange}  >
-                    <option value="Twitter">Twitter</option>
-                    <option value="YouTube">YouTube</option>
-                    <option value="Document">Document</option>
-                    <option value="Link">Link</option>
+                    <option value="twitter">Twitter</option>
+                    <option value="youtube">YouTube</option>
+                    <option value="document">Document</option>
+                    <option value="link">Link</option>
                 </select>
                 <InputBox title="Enter the title" name="title" maxLength={50} onChange={handleInputChange} />
                 <InputBox title="Enter your Link" name="link" maxLength={100} onChange={handleInputChange} />                  
@@ -94,15 +133,7 @@ export default function AddContentModal({
                         })
                     }
                 </div>
-                <Button variant="primary" size="sm" text="Submit" onClick={() => {
-                    if (formData.type === "twitter" && !(formData.link.includes("x.com") || formData.link.includes("twitter.com"))){
-                        alert("Not a valid Twitter Link")
-                    }
-                    else if (formData.type === "youtube" && !(formData.link.includes("youtu.be") || formData.link.includes("youtube.com"))){
-                        alert("Not a valid YouTube Link")
-                    }
-                    console.log(formData)
-                }} />
+                <Button variant="primary" size="sm" text="Submit" onClick={handleAddContent} />
             </div>
         </Modal>
     )
