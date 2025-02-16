@@ -12,7 +12,7 @@ interface AddContentModalInterface{
 }
 
 interface formDataInterface {
-    type: "twitter" | "youtube" | "document" | "link",
+    type: "tweet" | "youtube" | "document" | "link",
     title: string,
     link: string,
     tags: string[]
@@ -23,7 +23,7 @@ export default function AddContentModal({
     setOpen,
 }: AddContentModalInterface){
     const [formData, setFormData] = useState<formDataInterface>({
-        type: 'twitter',
+        type: 'tweet',
         title: '',
         link: '',
         tags: []
@@ -64,7 +64,7 @@ export default function AddContentModal({
 
     const handleAddContent = () => {
         const token = localStorage.getItem("token")
-        if (formData.type === "twitter" && !(formData.link.includes("x.com") || formData.link.includes("twitter.com"))){
+        if (formData.type === "tweet" && !(formData.link.includes("x.com") || formData.link.includes("twitter.com"))){
             alert("Not a valid Twitter Link")
         }
         else if (formData.type === "youtube" && !(formData.link.includes("youtu.be") || formData.link.includes("youtube.com"))){
@@ -104,7 +104,7 @@ export default function AddContentModal({
                 <select name="type" id="type"
                 className="w-full h-10 p-2 text-base border-1 appearance-none border-gray-500 rounded-md"
                 onChange={handleInputChange}  >
-                    <option value="twitter">Twitter</option>
+                    <option value="tweet">Tweet</option>
                     <option value="youtube">YouTube</option>
                     <option value="document">Document</option>
                     <option value="link">Link</option>

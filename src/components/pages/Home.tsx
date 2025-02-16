@@ -81,7 +81,7 @@ export default function Home(){
                     content.length > 0 ? content.map((item) => {
                         return (
                             <div key={item.id}>
-                                <Card title={item.title} link={item.link} type={item.type} tags={[]} />
+                                <Card id={item.id} title={item.title} link={item.link} type={item.type} tags={[]} />
                             </div>
                         )
                     }) :

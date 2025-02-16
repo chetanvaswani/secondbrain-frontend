@@ -1,9 +1,11 @@
-import { IoShareSocialOutline } from "react-icons/io5";
 import { RiDeleteBinLine } from "react-icons/ri";
 import { CgFileDocument } from "react-icons/cg";
 import { CiTwitter } from "react-icons/ci";
 import { PiYoutubeLogoLight } from "react-icons/pi";
 import { FaLink } from "react-icons/fa6";
+import { FiEdit } from "react-icons/fi";
+import DeleteContentModal from "./DeleteContentModal";
+import { useState } from "react";
 
 
 interface tag {
@@ -16,7 +18,8 @@ interface cardProps {
     type: "document" | "tweet" | "link" | "youtube",
     link: string,
     title: string,
-    tags: tag[]
+    tags: tag[],
+    id: number
 }
 
 interface tagProps {
@@ -40,42 +43,52 @@ export default function Card({
     type,
     link,
     title,
-    tags
+    tags,
+    id
 } : cardProps) {
+    const [deletModal, setDeleteModal] = useState(false)
+
+    const handleDelete = () => {
+        setDeleteModal(true)
+    }
+
     return (
-        <div className="w-[31%] min-w-72 max-w-96 h-fit bg-white rounded-2xl border-1 border-gray-200 text-black p-4 flex flex-col gap-4" >
-            <div className="flex justify-between items-center">
-                <div className="flex items-center gap-3">
-                    {cardType[type]}
-                    <p className="font-medium text-lg text-gray-600 leading-5">{title}</p>
+        <div>
+            <DeleteContentModal id={id} open={deletModal} setOpen={setDeleteModal} />
+            <div className="w-[31%] min-w-72 max-w-96 h-fit bg-white rounded-2xl border-1 border-gray-200 text-black p-4 flex flex-col gap-4" >
+                <div className="flex justify-between items-center">
+                    <div className="flex items-center gap-3">
+                        {cardType[type]}
+                        <p className="font-medium text-lg text-gray-600 leading-5">{title}</p>
+                    </div>
+                    <div className="flex gap-4">
+                        <FiEdit className={`${cardIconsStyles} before:content-['select'] before:ml-2 before:text-black before:absolute before:top-1 before:left-1 before `} />
+                        <RiDeleteBinLine className={`${cardIconsStyles} before:content-['select'] before:ml-2 before:text-black before:absolute before:top-1 before:left-1 before `} onClick={handleDelete} />
+                    </div>
                 </div>
-                <div className="flex gap-5">
-                    <IoShareSocialOutline className={`${cardIconsStyles} before:content-['select'] before:ml-2 before:text-black before:absolute before:top-1 before:left-1 before `} />
-                    <RiDeleteBinLine className={`${cardIconsStyles} before:content-['select'] before:ml-2 before:text-black before:absolute before:top-1 before:left-1 before `} />
+                <div className="overflow-hidden text-gray-600 font-light">
+                    {
+                        type === "youtube" ? <YoutubeEmbeded link={link} /> :
+                        type === "tweet" ? <TwitterEmbeded link={link} /> : 
+                        type === 'link' ? false : 
+                        type === "document" ? false : false
+                    }
                 </div>
-            </div>
-            <div className="overflow-hidden text-gray-600 font-light">
-                {
-                    type === "youtube" ? <YoutubeEmbeded link={link} /> :
-                    type === "tweet" ? <TwitterEmbeded link={link} /> : 
-                    type === 'link' ? false : 
-                    type === "document" ? false : false
-                }
-            </div>
-            <div className="flex justify-start gap-2 items-start flex-wrap ">
-                {
-                   tags && tags?.length > 0 ? tags.map((tag) => {
-                    console.log(tag)
-                        return (
-                            <div key={tag.id}>
-                                <Tag title={tag.title} />
-                            </div>
-                        )
-                    }) : false
-                }
-            </div>
-            <div className="text-gray-500 text-sm font-extralight">
-                Added on 31/01/2025
+                <div className="flex justify-start gap-2 items-start flex-wrap ">
+                    {
+                    tags && tags?.length > 0 ? tags.map((tag) => {
+                        console.log(tag)
+                            return (
+                                <div key={tag.id}>
+                                    <Tag title={tag.title} />
+                                </div>
+                            )
+                        }) : false
+                    }
+                </div>
+                <div className="text-gray-500 text-sm font-extralight">
+                    Added on 31/01/2025
+                </div>
             </div>
         </div>
     )
