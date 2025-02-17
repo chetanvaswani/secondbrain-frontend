@@ -25,6 +25,7 @@ export default function DeleteContentModal({
         }).then((res) => {
             if(res.data.success){
                 setOpen(false)
+                
             }
         }).catch((err) => {
             alert("Some error occured while deleting the content. Please try again.")

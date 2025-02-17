@@ -9,6 +9,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { GrDocumentMissing } from "react-icons/gr";
 import axios from 'axios';
+import Loader from '../Loader'
 
 interface contentInterface { 
     id: number,
@@ -25,6 +26,7 @@ export default function Home(){
     const navigate = useNavigate();
     const [token, setToken] = useState<string | null>(null);
     const [content, setContent] = useState<contentInterface[]>([])
+    const [loading, setLoading] = useState<boolean>(true)
 
     useEffect(() => {
         const res = localStorage.getItem("token");
@@ -46,9 +48,11 @@ export default function Home(){
                 if(res.data.success && res.data.data.length > 0){
                     setContent(res.data.data)
                     console.log(res.data.data)
+                    setLoading(false)
                 }
             }).catch((err) => {
                 console.log(err)
+                setLoading(false)
             })
         }
     },[token])
@@ -77,7 +81,13 @@ export default function Home(){
                 </div>
               </div>
               <div className='flex flex-wrap justify-start gap-7 overflow-auto w-full h-full px-10 py-5'>
-                {
+                {   
+                    loading ?
+                        <div className='h-full w-full flex justify-center items-center flex-col gap-3'>
+                            <Loader />
+                            <div className='text-gray-500 text-2xl'>Loading your content...</div>
+                        </div>
+                     :
                     content.length > 0 ? content.map((item) => {
                         return (
                             <div key={item.id}>
