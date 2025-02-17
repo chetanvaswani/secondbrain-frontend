@@ -54,7 +54,7 @@ export default function Card({
 
     return (
         <div>
-            <DeleteContentModal id={id} open={deletModal}  setOpen={setDeleteModal} />
+            <DeleteContentModal id={id} open={deletModal} setOpen={setDeleteModal} />
             <div className="w-[31%] min-w-72 max-w-96 h-fit bg-white rounded-2xl border-1 border-gray-200 text-black p-4 flex flex-col gap-4" >
                 <div className="flex justify-between items-center">
                     <div className="flex items-center gap-3">

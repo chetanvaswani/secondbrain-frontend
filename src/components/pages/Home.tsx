@@ -5,7 +5,7 @@ import { IoShareSocialOutline } from "react-icons/io5";
 import { GoPlus } from "react-icons/go";
 import AddContentModal from "../AddContentModal";
 import ShareContentModal from '../ShareContentModal';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { GrDocumentMissing } from "react-icons/gr";
 import axios from 'axios';
@@ -23,10 +23,11 @@ export default function Home(){
     const URL: string = "http://localhost:6001/api/v1/content";
     const [addContentModal, setAddContentModal] = useState(false);
     const [shareContentModal, setShareContentModal] = useState(false);
-    const navigate = useNavigate();
     const [token, setToken] = useState<string | null>(null);
-    const [content, setContent] = useState<contentInterface[]>([])
-    const [loading, setLoading] = useState<boolean>(true)
+    const [content, setContent] = useState<contentInterface[]>([]);
+    const [loading, setLoading] = useState<boolean>(true);
+    const readLoadContent = useRef<boolean>(true)
+    const navigate = useNavigate();
 
     useEffect(() => {
         const res = localStorage.getItem("token");
@@ -39,7 +40,7 @@ export default function Home(){
     }, [])
 
     useEffect(() => {
-        if(token){
+        if(token && readLoadContent.current){
             axios.get(URL, {
                 headers: {
                     'Authorization': `Bearer ${token}`
@@ -54,8 +55,10 @@ export default function Home(){
                 console.log(err)
                 setLoading(false)
             })
+            
+            readLoadContent.current = false;
         }
-    },[token])
+    },[token, readLoadContent.current])
   
     return (
         <div className='h-screen w-screen flex'>
