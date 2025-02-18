@@ -9,22 +9,16 @@ import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { GrDocumentMissing } from "react-icons/gr";
 import axios from 'axios';
-import Loader from '../Loader'
+import Loader from '../Loader';
+import {cardProps} from '../Card'
 
-interface contentInterface { 
-    id: number,
-    type: "document" | "tweet" | "link" | "youtube",
-    link: string,
-    title: string,
-    tags: string[]
-}
 
 export default function Home(){
     const URL: string = "http://localhost:6001/api/v1/content";
     const [addContentModal, setAddContentModal] = useState(false);
     const [shareContentModal, setShareContentModal] = useState(false);
     const [token, setToken] = useState<string | null>(null);
-    const [content, setContent] = useState<contentInterface[]>([]);
+    const [content, setContent] = useState<cardProps[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const readLoadContent = useRef<boolean>(true)
     const navigate = useNavigate();
@@ -40,7 +34,9 @@ export default function Home(){
     }, [])
 
     useEffect(() => {
+        console.log(readLoadContent.current)
         if(token && readLoadContent.current){
+            console.log("hello")
             axios.get(URL, {
                 headers: {
                     'Authorization': `Bearer ${token}`
@@ -55,14 +51,14 @@ export default function Home(){
                 console.log(err)
                 setLoading(false)
             })
-            
+
             readLoadContent.current = false;
         }
     },[token, readLoadContent.current])
   
     return (
         <div className='h-screen w-screen flex'>
-          <AddContentModal open={addContentModal} setOpen={setAddContentModal} />
+          <AddContentModal open={addContentModal} setOpen={setAddContentModal} readLoadContent={readLoadContent} />
           <ShareContentModal open={shareContentModal} setOpen={setShareContentModal} />
           <div className='h-full'> 
             <Sidebar />
@@ -87,14 +83,14 @@ export default function Home(){
                 {   
                     loading ?
                         <div className='h-full w-full flex justify-center items-center flex-col gap-3'>
-                            <Loader />
+                            <Loader height='13' width='13'/>
                             <div className='text-gray-500 text-2xl'>Loading your content...</div>
                         </div>
                      :
                     content.length > 0 ? content.map((item) => {
                         return (
-                            <div key={item.id}>
-                                <Card id={item.id} title={item.title} link={item.link} type={item.type} tags={[]} />
+                            <div key={item.id} className='w-[31%] max-w-96 min-w-72'>
+                                <Card readLoadContent={readLoadContent} id={item.id} title={item.title} link={item.link} type={item.type} tags={item.tags} />
                             </div>
                         )
                     }) :

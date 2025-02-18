@@ -5,7 +5,8 @@ interface ButtonProps {
     startIcon?: any,
     endIcon?: any,
     onClick? : () => void,
-    type?: "submit" | "button"
+    type?: "submit" | "button",
+    disabled?: boolean
 }
 
 const variantStyles = {
@@ -28,10 +29,12 @@ export default function Button({
     startIcon,
     endIcon,
     onClick,
-    type
+    type,
+    disabled
 }: ButtonProps){
     return (
-        <button className={`${variantStyles[variant]} ${defaultStyles} ${sizeStypes[size]}`} onClick={onClick} type={type}>
+        <button className={ `${variantStyles[variant]} ${defaultStyles} ${sizeStypes[size]} disabled:opacity-[80%] ${ variant === "primary" ? "disabled:text-gray-200" : "disabled:text-gray-600"}` }
+        disabled={disabled ? disabled : false} onClick={onClick} type={type}>
             <div className="flex justify-center items-center gap-2">
                 {startIcon}
                 {text}
