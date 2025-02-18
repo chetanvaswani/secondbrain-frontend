@@ -15,6 +15,8 @@ export default function signup(){
         password: "",
         confirmation: ""
     });
+    const [disabled, setDisabled] = useState(false);
+    const [ buttonText, setButtonText ] = useState("Create an Account")
 
     const uppercaseWords = (str: string )=> str.replace(/^(.)|\s+(.)/g, c => c.toUpperCase());
 
@@ -27,12 +29,15 @@ export default function signup(){
     };
 
     const handleSignup = async () => {
+        setDisabled(true)
+        setButtonText("Creating an account for you...")
         if (!(formData.password === formData.confirmation)){
             if (alerDivtRef.current) {
                 alerDivtRef.current.innerText = "Passwords Do Not Match";
             }
+            setDisabled(false)
+            return
         }
-        // console.log(formData)
         axios.post(URL, {
             username: formData.username,
             password: formData.password
@@ -40,9 +45,12 @@ export default function signup(){
             console.log(res)
             if(res.data.success){
                 if (alerDivtRef.current) {
-                    alerDivtRef.current.innerText = "Signup Successful. Navigating you to the login page.";
+                    alerDivtRef.current.innerText = "Signup Successful.";
                 }
+                setButtonText("Redirecting to the login page...")
                 setTimeout(() => {
+                    setButtonText("Create an Account")
+                    setDisabled(false)
                     navigate('/login')
                 }, 1500)
             }
@@ -57,6 +65,8 @@ export default function signup(){
             if (alerDivtRef.current) {
                 alerDivtRef.current.innerText = `${uppercaseWords(msg)}. Please try again.`;
             }
+            setButtonText("Create an Account")
+            setDisabled(false)
         })
     }
 
@@ -75,15 +85,15 @@ export default function signup(){
                     <div className="text-gray-400 border border-gray-200 my-6" />
                     <div className="flex flex-col gap-6" >
                         <InputBox title="Username" name="username" height={12} maxLength={50} onChange={handleInputChange} />
-                        <InputBox title="Password" name="password" height={12} maxLength={50} onChange={handleInputChange}  />
-                        <InputBox title="Confirm Password" name="confirmation" height={12} maxLength={50} onChange={handleInputChange} onKeyDown={(e) => {
+                        <InputBox title="Password" type="password" name="password" height={12} maxLength={50} onChange={handleInputChange}  />
+                        <InputBox title="Confirm Password" type="password" name="confirmation" height={12} maxLength={50} onChange={handleInputChange} onKeyDown={(e) => {
                             if(e.key === "Enter"){
                                 console.log("enter is pressed")
                                 handleSignup();
                             }
                         }}/>
                         <div className="text-center text-gray-400 text-sm" ref={alerDivtRef} > </div>
-                        <Button variant="primary" size="lg" text="Create my Account" onClick={handleSignup} />
+                        <Button variant="primary" size="lg" text={buttonText} onClick={handleSignup} disabled={disabled} />
                         <div className="text-gray-400 border border-gray-200 " />
                         <div className="flex justify-center">
                             <Button variant="secondary" size="lg" text="Login using existing Account" onClick={() => {

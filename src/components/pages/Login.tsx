@@ -14,6 +14,8 @@ export default function Login(){
         username: "",
         password: ""
     });
+    const [disabled, setDisabled] = useState(false);
+    const [ buttonText, setButtonText ] = useState("Login")
 
     useEffect(() => {
         const res = localStorage.getItem("token");
@@ -34,21 +36,24 @@ export default function Login(){
     };
 
     const handleLogin = async () => {
-        if (alerDivtRef.current) {
-            alerDivtRef.current.innerText = "Loging in...";
-        }
-        // console.log(formData)
+        setDisabled(true)
+        setButtonText("Logging in...")
         axios.post(URL, formData).then((res) => {
             if(res.data.success){
                 if (alerDivtRef.current) {
                     alerDivtRef.current.innerText = "Login successful";
                 }
-                localStorage.setItem("token", res.data.data.token);
-                navigate('/')
+                setButtonText("Redirecting to home...")
+                setTimeout(() => {
+                    localStorage.setItem("token", res.data.data.token);
+                    navigate('/')
+                    setButtonText("Login")
+                    setDisabled(false)
+                }, 500)
             }
         }).catch((err) => {
             let msg: string;
-             msg = "Invalid request"
+            msg = "Invalid request"
             if (err.response.status === 403){
                 msg = err.response.data.data
             } else if (err.response.status === 400){
@@ -57,6 +62,8 @@ export default function Login(){
             if (alerDivtRef.current) {
                 alerDivtRef.current.innerText = `${uppercaseWords(msg)}. Please try again.`;
             }
+            setButtonText("Login")
+            setDisabled(false)
         })
     }
 
@@ -88,7 +95,7 @@ export default function Login(){
                             }
                         }} />
                         <div className="text-center text-gray-400 text-sm" ref={alerDivtRef} > </div>
-                        <Button variant="primary" size="lg" text="Log in" onClick={handleLogin} />
+                        <Button variant="primary" size="lg" text={buttonText} onClick={handleLogin} disabled={disabled} />
                         <p className="cursor-pointer text-center text-purple-600" >Forgot Password?</p>
                         <div className="text-gray-400 border border-gray-200 " />
                         <div className="flex justify-center">
