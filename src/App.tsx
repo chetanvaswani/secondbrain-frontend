@@ -13,6 +13,7 @@ function App() {
   )
 }
 
+
 function Main(){
   return (
     <>
@@ -20,6 +21,7 @@ function Main(){
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
+        <Route path="/seeBrain/:shareLink" element={<Signup />} />
       </Routes>
     </>
   )
