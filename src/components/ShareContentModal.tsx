@@ -6,12 +6,14 @@ import { useRef } from 'react';
 
 interface ShareContentModalInterface{
     open: boolean,
-    setOpen: (value: boolean) => void
+    setOpen: (value: boolean) => void,
+    length: number
 }
 
 export default function ShareContentModal({
     open, 
-    setOpen
+    setOpen,
+    length
 }: ShareContentModalInterface){
     const URL = 'http://localhost:6001/api/v1/brain/share';
     const alerDivtRef= useRef<HTMLInputElement | null>(null);
@@ -58,7 +60,7 @@ export default function ShareContentModal({
                 </p>
                 <div className="text-center text-gray-400 text-sm" ref={alerDivtRef} > </div>
                 <Button variant='primary' text='Share Brain' size="lg" startIcon={<LuCopy />} onClick={handleShareContent} />
-                <p className='text-gray-400 text-center'>5 items will be shared</p>
+                <p className='text-gray-400 text-center'>{length} items will be shared</p>
             </div>
         </Modal>
     )

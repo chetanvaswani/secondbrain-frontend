@@ -1,20 +1,20 @@
 import Modal from "./Modal";
 import Button from "./Button";
 import axios from "axios";
-import { RefObject, useRef, useState } from "react";
+import { useRef, useState } from "react";
 
 interface DeleteContentModalInterface {
     open: boolean,
     setOpen: (value: boolean) => void,
     id: number,
-    readLoadContent: RefObject<boolean>,
+    setReloadContent: (agr: boolean) => void,
 }
 
 export default function DeleteContentModal({
     open,
     setOpen,
     id,
-    readLoadContent
+    setReloadContent
 }:DeleteContentModalInterface){
     const DELETE_URL = "http://localhost:6001/api/v1/content/";
     const [disabled, setDisabled] = useState(false);
@@ -32,19 +32,17 @@ export default function DeleteContentModal({
                 'Authorization': `Bearer ${token}`
             }
         }).then((res) => {
-            console.log(readLoadContent.current)
             if(res.data.success){
                 if (alerDivtRef.current){
                     alerDivtRef.current.innerText = "Success."
                 }
                 console.log(res)
-                readLoadContent.current = true
+                setReloadContent(true)
                 setTimeout(() => {
                     setOpen(false)
                     setDisabled(false)
                     alerDivtRef.current ? alerDivtRef.current.innerText = "" : false
                 }, 1000)
-                console.log(readLoadContent.current)
             }
         }).catch((err) => {
             if (alerDivtRef.current){

@@ -5,7 +5,7 @@ import { IoShareSocialOutline } from "react-icons/io5";
 import { GoPlus } from "react-icons/go";
 import AddContentModal from "../AddContentModal";
 import ShareContentModal from '../ShareContentModal';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { GrDocumentMissing } from "react-icons/gr";
 import axios from 'axios';
@@ -20,7 +20,7 @@ export default function Home(){
     const [token, setToken] = useState<string | null>(null);
     const [content, setContent] = useState<cardProps[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
-    const readLoadContent = useRef<boolean>(true)
+    const [readloadContent, setReloadContent] = useState<boolean>(true)
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -34,8 +34,7 @@ export default function Home(){
     }, [])
 
     useEffect(() => {
-        console.log(readLoadContent.current)
-        if(token && readLoadContent.current){
+        if(token && readloadContent){
             console.log("hello")
             axios.get(URL, {
                 headers: {
@@ -52,14 +51,14 @@ export default function Home(){
                 setLoading(false)
             })
 
-            readLoadContent.current = false;
+            setReloadContent(false)
         }
-    },[token, readLoadContent.current])
+    },[token, readloadContent])
   
     return (
         <div className='h-screen w-screen flex'>
-          <AddContentModal open={addContentModal} setOpen={setAddContentModal} readLoadContent={readLoadContent} />
-          <ShareContentModal open={shareContentModal} setOpen={setShareContentModal} />
+          <AddContentModal open={addContentModal} setOpen={setAddContentModal} setReloadContent={setReloadContent} />
+          <ShareContentModal open={shareContentModal} setOpen={setShareContentModal} length={content.length} />
           <div className='h-full'> 
             <Sidebar />
           </div>
@@ -83,14 +82,14 @@ export default function Home(){
                 {   
                     loading ?
                         <div className='h-full w-full flex justify-center items-center flex-col gap-3'>
-                            <Loader height='13' width='13'/>
+                            <Loader height='13' width='13' />
                             <div className='text-gray-500 text-2xl'>Loading your content...</div>
                         </div>
                      :
                     content.length > 0 ? content.map((item) => {
                         return (
                             <div key={item.id} className='w-[31%] max-w-96 min-w-72'>
-                                <Card readLoadContent={readLoadContent} id={item.id} title={item.title} link={item.link} type={item.type} tags={item.tags} />
+                                <Card setReloadContent={setReloadContent} id={item.id} title={item.title} link={item.link} type={item.type} tags={item.tags} />
                             </div>
                         )
                     }) :
@@ -99,11 +98,6 @@ export default function Home(){
                         <p className='text-gray-300 text-2xl font-bold'>No Content to Display.</p>
                     </div>
                 }
-                {/* <Card tags={['coding', 'schaling']} title='Scaling Infra' link="https://youtu.be/a5kKRtMmhzQ?si=MGFhqzmAVgVNwyIQ" type="youtube" />
-                <Card tags={['lessonsbysalman', 'learnings', 'principles']} title='Life advice by Salman Khan' link="https://youtu.be/34A_byKv26s?si=xmUoO0bYKb9xDFJM" type="youtube" />
-                <Card tags={['business']} title='Shark Tank: Go Zero' link="https://youtu.be/KwHNPgZDRPM?si=lCo5n3t7BgQ4DP5" type="youtube" />
-                <Card tags={['productivity', 'ideas']} title='Musk on Doge' link="https://x.com/elonmusk/status/1888891512303263815" type="tweet" />
-                <Card tags={['meme', 'fun']} title='Meme' link="https://x.com/elonmusk/status/1888320372615069983" type="tweet" /> */}
               </div>
             </div>
         </div>

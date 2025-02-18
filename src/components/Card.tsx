@@ -6,7 +6,6 @@ import { FaLink } from "react-icons/fa6";
 import { FiEdit } from "react-icons/fi";
 import DeleteContentModal from "./DeleteContentModal";
 import { useState } from "react";
-import { RefObject } from "react";
 
 
 export interface tag {
@@ -21,7 +20,7 @@ export interface cardProps {
     title: string,
     tags: tag[],
     id: number,
-    readLoadContent: RefObject<boolean>,
+    setReloadContent: (arg: boolean) => void,
 }
 
 interface tagProps {
@@ -47,7 +46,7 @@ export default function Card({
     title,
     tags,
     id,
-    readLoadContent
+    setReloadContent
 } : cardProps) {
     const [deletModal, setDeleteModal] = useState(false)
 
@@ -57,7 +56,7 @@ export default function Card({
 
     return (
         <>
-            <DeleteContentModal id={id} open={deletModal} setOpen={setDeleteModal} readLoadContent={readLoadContent} />
+            <DeleteContentModal id={id} open={deletModal} setOpen={setDeleteModal} setReloadContent={setReloadContent} />
             <div className="w-full h-fit bg-white rounded-2xl border-1 border-gray-200 text-black p-4 flex flex-col gap-4" >
                 <div className="flex justify-between items-center">
                     <div className="flex items-center gap-3">

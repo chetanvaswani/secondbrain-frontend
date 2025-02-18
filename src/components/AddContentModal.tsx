@@ -5,12 +5,12 @@ import { useState } from "react";
 import { IoCloseOutline } from "react-icons/io5";
 import InputBox from './InputBox'
 import axios from "axios";
-import { RefObject } from "react";
+import { useRef } from "react";
 
 interface AddContentModalInterface{
     open: boolean,
     setOpen: (value: boolean) => void,
-    readLoadContent: RefObject<boolean>
+    setReloadContent: (arg: boolean) => void
 }
 
 interface formDataInterface {
@@ -23,7 +23,7 @@ interface formDataInterface {
 export default function AddContentModal({
     open,
     setOpen,
-    readLoadContent
+    setReloadContent
 }: AddContentModalInterface){
     const [formData, setFormData] = useState<formDataInterface>({
         type: 'tweet',
@@ -33,7 +33,8 @@ export default function AddContentModal({
     })
     let timeout: any;
     const [disabled, setDisabled] = useState<boolean>(false);
-    const [buttonText, setButtonText] = useState("Submit")
+    const [buttonText, setButtonText] = useState("Submit");
+    const alerDivtRef= useRef<HTMLInputElement | null>(null);
     const URL = "http://localhost:6001/api/v1/content";
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -50,15 +51,15 @@ export default function AddContentModal({
         // @ts-ignore
         document.getElementById('tag-input').value = ""
         if (value.length === 0){
-            alert("Can not add empty tag")
+            alerDivtRef.current ? alerDivtRef.current.innerText = "Can not add empty tag" : false
             return
         }
         if( formData.tags.includes(value) ){
-            alert("Can't add the same tag twice")
+            alerDivtRef.current ? alerDivtRef.current.innerText = "Can't add the same tag twice" : false
             return
         }
         if ( value.includes(" ")){
-            alert("A tag can not have spaces in between")
+            alerDivtRef.current ? alerDivtRef.current.innerText = "A tag can not have spaces in between" : false
             return
         }
         setFormData({
@@ -68,18 +69,21 @@ export default function AddContentModal({
     }
 
     const handleAddContent = () => {
-        setButtonText("Adding Content to your brain...");
-        setDisabled(true)
         const token = localStorage.getItem("token");
         if (formData.type === "tweet" && !(formData.link.includes("x.com") || formData.link.includes("twitter.com"))){
-            alert("Not a valid Twitter Link")
+            alerDivtRef.current ? alerDivtRef.current.innerText = "Not a valid Twitter Link" : false
+            return
         }
         else if (formData.type === "youtube" && !(formData.link.includes("youtu.be") || formData.link.includes("youtube.com"))){
-            alert("Not a valid YouTube Link")
+            alerDivtRef.current ? alerDivtRef.current.innerText = "Not a valid YouTube Link" : false
+            return
         }
         if (!token){
-            console.log("You are not authorized")
+            alerDivtRef.current ? alerDivtRef.current.innerText = "You are not authorized" : false
+            return
         }
+        setButtonText("Adding Content to your brain...");
+        setDisabled(true)
         axios.post(URL, {
             "type": formData.type,
             "title": formData.title,
@@ -93,15 +97,14 @@ export default function AddContentModal({
             if (res.data.success){
                 // alert("Successfully added new content")
                 setButtonText("Success.")
-                readLoadContent.current = true
+                setReloadContent(true)
                 setTimeout(() => {
                     setOpen(false);
                     setButtonText("Submit");
                     setDisabled(false)
                 }, 500)
             }
-        }).catch((err) => {
-            console.log(err)
+        }).catch(() => {
             setButtonText("Error Occured! Please Try again!");
             setDisabled(false)
             setTimeout(() => {
@@ -147,6 +150,7 @@ export default function AddContentModal({
                         })
                     }
                 </div>
+                <div className="text-center text-gray-400 text-sm" ref={alerDivtRef} > </div>
                 <Button variant="primary" size="sm" text={buttonText} onClick={handleAddContent} disabled={disabled} />
             </div>
         </Modal>
