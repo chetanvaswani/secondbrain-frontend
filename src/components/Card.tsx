@@ -6,20 +6,22 @@ import { FaLink } from "react-icons/fa6";
 import { FiEdit } from "react-icons/fi";
 import DeleteContentModal from "./DeleteContentModal";
 import { useState } from "react";
+import { RefObject } from "react";
 
 
-interface tag {
+export interface tag {
     id: number,
     title: string,
     contentId: number
 }
 
-interface cardProps { 
+export interface cardProps { 
     type: "document" | "tweet" | "link" | "youtube",
     link: string,
     title: string,
     tags: tag[],
-    id: number
+    id: number,
+    readLoadContent: RefObject<boolean>,
 }
 
 interface tagProps {
@@ -44,7 +46,8 @@ export default function Card({
     link,
     title,
     tags,
-    id
+    id,
+    readLoadContent
 } : cardProps) {
     const [deletModal, setDeleteModal] = useState(false)
 
@@ -53,9 +56,9 @@ export default function Card({
     }
 
     return (
-        <div>
-            <DeleteContentModal id={id} open={deletModal} setOpen={setDeleteModal} />
-            <div className="w-[31%] min-w-72 max-w-96 h-fit bg-white rounded-2xl border-1 border-gray-200 text-black p-4 flex flex-col gap-4" >
+        <>
+            <DeleteContentModal id={id} open={deletModal} setOpen={setDeleteModal} readLoadContent={readLoadContent} />
+            <div className="w-full h-fit bg-white rounded-2xl border-1 border-gray-200 text-black p-4 flex flex-col gap-4" >
                 <div className="flex justify-between items-center">
                     <div className="flex items-center gap-3">
                         {cardType[type]}
@@ -77,9 +80,8 @@ export default function Card({
                 <div className="flex justify-start gap-2 items-start flex-wrap ">
                     {
                     tags && tags?.length > 0 ? tags.map((tag) => {
-                        console.log(tag)
                             return (
-                                <div key={tag.id}>
+                                <div key={`${tag.id}-${tag.contentId}`}>
                                     <Tag title={tag.title} />
                                 </div>
                             )
@@ -90,7 +92,7 @@ export default function Card({
                     Added on 31/01/2025
                 </div>
             </div>
-        </div>
+        </>
     )
 }
 

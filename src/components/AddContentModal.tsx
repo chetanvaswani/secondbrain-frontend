@@ -5,10 +5,12 @@ import { useState } from "react";
 import { IoCloseOutline } from "react-icons/io5";
 import InputBox from './InputBox'
 import axios from "axios";
+import { RefObject } from "react";
 
 interface AddContentModalInterface{
     open: boolean,
-    setOpen: (value: boolean) => void
+    setOpen: (value: boolean) => void,
+    readLoadContent: RefObject<boolean>
 }
 
 interface formDataInterface {
@@ -21,6 +23,7 @@ interface formDataInterface {
 export default function AddContentModal({
     open,
     setOpen,
+    readLoadContent
 }: AddContentModalInterface){
     const [formData, setFormData] = useState<formDataInterface>({
         type: 'tweet',
@@ -29,7 +32,9 @@ export default function AddContentModal({
         tags: []
     })
     let timeout: any;
-    const URL = "http://localhost:6001/api/v1/content"
+    const [disabled, setDisabled] = useState<boolean>(false);
+    const [buttonText, setButtonText] = useState("Submit")
+    const URL = "http://localhost:6001/api/v1/content";
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         clearTimeout(timeout)
@@ -63,7 +68,9 @@ export default function AddContentModal({
     }
 
     const handleAddContent = () => {
-        const token = localStorage.getItem("token")
+        setButtonText("Adding Content to your brain...");
+        setDisabled(true)
+        const token = localStorage.getItem("token");
         if (formData.type === "tweet" && !(formData.link.includes("x.com") || formData.link.includes("twitter.com"))){
             alert("Not a valid Twitter Link")
         }
@@ -73,12 +80,6 @@ export default function AddContentModal({
         if (!token){
             console.log("You are not authorized")
         }
-        console.log({
-            "type": formData.type,
-            "title": formData.title,
-            "link": formData.link,
-            "tags": formData.tags
-        })
         axios.post(URL, {
             "type": formData.type,
             "title": formData.title,
@@ -91,10 +92,21 @@ export default function AddContentModal({
         }).then((res) => {
             if (res.data.success){
                 // alert("Successfully added new content")
-                setOpen(false)
+                setButtonText("Success.")
+                readLoadContent.current = true
+                setTimeout(() => {
+                    setOpen(false);
+                    setButtonText("Submit");
+                    setDisabled(false)
+                }, 500)
             }
         }).catch((err) => {
             console.log(err)
+            setButtonText("Error Occured! Please Try again!");
+            setDisabled(false)
+            setTimeout(() => {
+                setButtonText("Submit")
+            }, 1500)
         })
     }
 
@@ -135,7 +147,7 @@ export default function AddContentModal({
                         })
                     }
                 </div>
-                <Button variant="primary" size="sm" text="Submit" onClick={handleAddContent} />
+                <Button variant="primary" size="sm" text={buttonText} onClick={handleAddContent} disabled={disabled} />
             </div>
         </Modal>
     )
