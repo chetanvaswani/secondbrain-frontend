@@ -8,31 +8,47 @@ import SidebarItem from "./SidebarItem";
 import Button from "./Button";
 import { TbLogout2 } from "react-icons/tb";
 import { useNavigate } from "react-router-dom";
+import { SidebarItemInterface } from "./SidebarItem";
 
-const sidebarItems = [
+const sidebarItems: SidebarItemInterface[] = [
     {
         name: "Tweets",
+        value: "tweet",
         icon: <CiTwitter className='size-6 stroke-1' />
     },
     {
         name: "Videos",
+        value: "youtube",
         icon: <PiYoutubeLogoLight className='size-6 stroke-3' />
     },
     {
         name : "Documents",
+        value: "document",
         icon : <CgFileDocument className='size-6' />
     },
     {
         name: "Links",
+        value: "link",
         icon: <FaLink className='size-6' />
     },
     {
         name: "Tags",
+        value: "tags",
         icon: <RiHashtag className="size-6" />
     }
 ]
 
-export default function Sidebar(){
+interface SidebarProps{
+    selectedCategory: "all" | "tweet" | "youtube" | "document" | "link" | "tags",
+    setSelectedCategory: (category: "all" | "tweet" | "youtube" | "document" | "link" | "tags") => void
+    login?: boolean
+}
+
+export default function Sidebar({
+    selectedCategory,
+    setSelectedCategory,
+    login
+}: SidebarProps){
     const navigate = useNavigate()
 
     return (
@@ -40,24 +56,28 @@ export default function Sidebar(){
             <div>
                 <div className="flex items-center p-2 gap-2">
                     <LuBrain className="size-10 fill text-purple-600 " />
-                    <div className="text-2xl font-semibold" >Second Brain</div>
+                    <div className="text-2xl font-semibold">Second Brain</div>
                 </div>
                 <div className="my-5">
                     {
                         sidebarItems.map((item) => {
+                            let selected = item.value === selectedCategory
                             return ( 
-                                <SidebarItem name={item.name} key={item.name} icon={item.icon} />
+                                <SidebarItem value={item.value} name={item.name} key={item.name} icon={item.icon} selected={selected} setSelectedCategory={setSelectedCategory} />
                             )
                         })
                     }
                 </div>
             </div>
-            <div className="py-2 px-5 w-full flex flex-col">
+            {
+                login ?
+                <div className="py-2 px-5 w-full flex flex-col">
                     <Button text="Logout" variant="primary" size="md" startIcon={<TbLogout2 />} onClick={() => {
                         localStorage.removeItem("token");
                         navigate('/login')
                     }} />
-            </div>
+                </div> : false
+            }
         </div>
     )
 }
