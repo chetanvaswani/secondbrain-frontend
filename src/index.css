@@ -5,3 +5,7 @@
     --color-purple-600: #5046e4;
     --color-black-50: rgba(0, 0, 0, 0.5);
 }
+
+@layer utilities{
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+}

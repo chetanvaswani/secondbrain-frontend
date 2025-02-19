@@ -82,7 +82,7 @@ export default function Home(){
                 {   
                     loading ?
                         <div className='h-full w-full flex justify-center items-center flex-col gap-3'>
-                            <Loader height='13' width='13' />
+                            <Loader />
                             <div className='text-gray-500 text-2xl'>Loading your content...</div>
                         </div>
                      :
