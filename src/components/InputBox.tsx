@@ -7,7 +7,8 @@ interface InputBoxPropsInterface {
     onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void,
     name?: string,
     height?: number,
-    type?: string
+    type?: string,
+    defaultValue?: string
 }
 
 export default function InputBox({
@@ -19,11 +20,12 @@ export default function InputBox({
     onKeyDown,
     name,
     height,
-    type
+    type,
+    defaultValue
 }: InputBoxPropsInterface){
     return (
         <input id={id} autoComplete="off" placeholder={title} required={required ? true : false}
         className={`w-full ${height ? `h-${height}` : "h-10"} p-2 text-base border-1 border-gray-500 rounded-md`}
-        maxLength={maxLength} onChange={onChange} onKeyDown={onKeyDown} name={name} type={type} />
+        maxLength={maxLength} onChange={onChange} onKeyDown={onKeyDown} name={name} type={type} defaultValue={defaultValue} />
     )
 }

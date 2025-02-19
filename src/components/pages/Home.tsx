@@ -10,7 +10,7 @@ import { useNavigate } from 'react-router-dom';
 import { GrDocumentMissing } from "react-icons/gr";
 import axios from 'axios';
 import Loader from '../Loader';
-import {cardProps} from '../Card'
+import {cardProps} from '../Card';
 
 
 export default function Home(){
@@ -22,6 +22,7 @@ export default function Home(){
     const [loading, setLoading] = useState<boolean>(true);
     const [readloadContent, setReloadContent] = useState<boolean>(true)
     const navigate = useNavigate();
+    const [selectedCategory, setSelectedCategory] = useState<"all" | "tweet" | "youtube" | "document" | "link" | "tags">("all")
 
     useEffect(() => {
         const res = localStorage.getItem("token");
@@ -43,14 +44,14 @@ export default function Home(){
             }).then((res) => {
                 if(res.data.success && res.data.data.length > 0){
                     setContent(res.data.data)
-                    console.log(res.data.data)
+                    setLoading(false)
+                } else{
                     setLoading(false)
                 }
             }).catch((err) => {
                 console.log(err)
                 setLoading(false)
             })
-
             setReloadContent(false)
         }
     },[token, readloadContent])
@@ -60,11 +61,20 @@ export default function Home(){
           <AddContentModal open={addContentModal} setOpen={setAddContentModal} setReloadContent={setReloadContent} />
           <ShareContentModal open={shareContentModal} setOpen={setShareContentModal} length={content.length} />
           <div className='h-full'> 
-            <Sidebar />
+            <Sidebar login={true} setSelectedCategory={setSelectedCategory} selectedCategory={selectedCategory} />
           </div>
           <div className='h-full w-full bg-gray-100 flex flex-col justify-start items-center'>
             <div className='w-full flex items-center justify-between p-10'>
-              <div className='text-3xl font-semibold ' >All Notes</div>
+              <div className='text-3xl font-semibold'>
+                {
+                    selectedCategory === "all" ? <p>All Notes</p> :
+                    selectedCategory === "tweet" ? <p>Tweets</p> : 
+                    selectedCategory === "youtube" ? <p>Vidoes</p> :
+                    selectedCategory === "link" ? <p>Links</p> :
+                    selectedCategory === "document" ? <p>Documents</p> :
+                    selectedCategory === "tags" ? <p>Content with Tags</p> : false
+                }
+              </div>
                 <div className='flex gap-5'>
                   <div onClick={() => {
                       setShareContentModal(true)

@@ -5,6 +5,7 @@ import { PiYoutubeLogoLight } from "react-icons/pi";
 import { FaLink } from "react-icons/fa6";
 import { FiEdit } from "react-icons/fi";
 import DeleteContentModal from "./DeleteContentModal";
+import EditContentModal from "./EditContentModal"
 import { useState } from "react";
 
 
@@ -20,7 +21,7 @@ export interface cardProps {
     title: string,
     tags: tag[],
     id: number,
-    setReloadContent: (arg: boolean) => void,
+    setReloadContent?: (arg: boolean) => void,
 }
 
 interface tagProps {
@@ -48,25 +49,46 @@ export default function Card({
     id,
     setReloadContent
 } : cardProps) {
-    const [deletModal, setDeleteModal] = useState(false)
+    const [deletModal, setDeleteModal] = useState(false);
+    const [editModal, setEditModal] = useState(false)
 
     const handleDelete = () => {
         setDeleteModal(true)
     }
+    const handleEdit = () => {
+        setEditModal(true)
+    }
 
     return (
         <>
-            <DeleteContentModal id={id} open={deletModal} setOpen={setDeleteModal} setReloadContent={setReloadContent} />
+            {
+                setReloadContent ?
+                    <div>
+                        <EditContentModal open={editModal} setOpen={setEditModal} card={{
+                            type,
+                            link,
+                            title,
+                            tags,
+                            id,
+                            setReloadContent
+                        }}  />
+                        <DeleteContentModal id={id} open={deletModal} setOpen={setDeleteModal} setReloadContent={setReloadContent} />
+                    </div>
+                : false
+            }
             <div className="w-full h-fit bg-white rounded-2xl border-1 border-gray-200 text-black p-4 flex flex-col gap-4" >
                 <div className="flex justify-between items-center">
                     <div className="flex items-center gap-3">
                         {cardType[type]}
                         <p className="font-medium text-lg text-gray-600 leading-5">{title}</p>
                     </div>
-                    <div className="flex gap-4">
-                        <FiEdit className={`${cardIconsStyles} before:content-['select'] before:ml-2 before:text-black before:absolute before:top-1 before:left-1 before `} />
-                        <RiDeleteBinLine className={`${cardIconsStyles} before:content-['select'] before:ml-2 before:text-black before:absolute before:top-1 before:left-1 before `} onClick={handleDelete} />
-                    </div>
+                    {
+                        setReloadContent ?
+                        <div className="flex gap-4">
+                            <FiEdit className={`${cardIconsStyles} before:content-['select'] before:ml-2 before:text-black before:absolute before:top-1 before:left-1 before `} onClick={handleEdit} />
+                            <RiDeleteBinLine className={`${cardIconsStyles} before:content-['select'] before:ml-2 before:text-black before:absolute before:top-1 before:left-1 before `} onClick={handleDelete} />
+                         </div> : false
+                    }
                 </div>
                 <div className="overflow-hidden text-gray-600 font-light">
                     {
