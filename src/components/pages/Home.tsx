@@ -18,9 +18,10 @@ export default function Home(){
     const [addContentModal, setAddContentModal] = useState(false);
     const [shareContentModal, setShareContentModal] = useState(false);
     const [token, setToken] = useState<string | null>(null);
+    const [data, setData] = useState<cardProps[]>([])
     const [content, setContent] = useState<cardProps[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
-    const [readloadContent, setReloadContent] = useState<boolean>(true)
+    const [readloadContent, setReloadContent] = useState<boolean>(true);
     const navigate = useNavigate();
     const [selectedCategory, setSelectedCategory] = useState<"all" | "tweet" | "youtube" | "document" | "link" | "tags">("all")
 
@@ -35,6 +36,24 @@ export default function Home(){
     }, [])
 
     useEffect(() => {
+        console.log(selectedCategory)
+        if (selectedCategory === "all"){
+            console.log(data)
+            setContent(data)
+        } 
+        if (["tweet", "youtube", "document", "link"].includes(selectedCategory)){
+            let newContent = data.filter(d => d.type === selectedCategory)
+            console.log(newContent)
+            setContent(newContent)
+        }
+        if (selectedCategory === "tags"){
+            console.log("hello world")
+            let newContent = data.filter(d => d.tags.length > 0)
+            setContent(newContent)
+        }
+    }, [selectedCategory, data])
+
+    useEffect(() => {
         if(token && readloadContent){
             console.log("hello")
             axios.get(URL, {
@@ -43,7 +62,7 @@ export default function Home(){
                 }
             }).then((res) => {
                 if(res.data.success && res.data.data.length > 0){
-                    setContent(res.data.data)
+                    setData(res.data.data)
                     setLoading(false)
                 } else{
                     setLoading(false)

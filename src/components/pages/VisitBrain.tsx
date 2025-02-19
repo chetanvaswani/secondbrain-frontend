@@ -11,14 +11,33 @@ export default function VisitBrain(){
     const location = window.location.href.split('/')
     const code = location[location.length - 1]
     const URL: string = "http://localhost:6001/api/v1/brain/" + code;
+    const [data, setData] = useState<cardProps[]>([]); 
     const [content, setContent] = useState<cardProps[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const [selectedCategory, setSelectedCategory] = useState<"all" | "tweet" | "youtube" | "document" | "link" | "tags">("all")
 
     useEffect(() => {
+        console.log(selectedCategory)
+        if (selectedCategory === "all"){
+            console.log(data)
+            setContent(data)
+        } 
+        if (["tweet", "youtube", "document", "link"].includes(selectedCategory)){
+            let newContent = data.filter(d => d.type === selectedCategory)
+            console.log(newContent)
+            setContent(newContent)
+        }
+        if (selectedCategory === "tags"){
+            console.log("hello world")
+            let newContent = data.filter(d => d.tags.length > 0)
+            setContent(newContent)
+        }
+    }, [selectedCategory, data])
+
+    useEffect(() => {
         axios.get(URL).then((res) => {
             if(res.data.success && res.data.data.length > 0){
-                setContent(res.data.data)
+                setData(res.data.data)
                 setLoading(false)
             }
         }).catch(() => {
