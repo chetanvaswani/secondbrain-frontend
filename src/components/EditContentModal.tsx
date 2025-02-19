@@ -137,7 +137,7 @@ export default function EditContentModal({
 
                 <div>
                     <div className="text-gray-400" >Link:</div>
-                    <InputBox title="Enter your Link" name="link" maxLength={100} defaultValue={card.link} onChange={handleInputChange} />                  
+                    <InputBox title="Enter your Link" name="link" maxLength={150} defaultValue={card.link} onChange={handleInputChange} />                  
                 </div>
 
                 <div>

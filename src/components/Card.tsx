@@ -94,8 +94,8 @@ export default function Card({
                     {
                         type === "youtube" ? <YoutubeEmbeded link={link} /> :
                         type === "tweet" ? <TwitterEmbeded link={link} /> : 
-                        type === 'link' ? false : 
-                        type === "document" ? false : false
+                        type === 'link' ? <LinkEmbeded link={link} /> : 
+                        type === "document" ? <DocumentEmbeded link={link}/> : false
                     }
                 </div>
                 <div className="flex justify-start gap-2 items-start flex-wrap ">
@@ -152,6 +152,30 @@ function TwitterEmbeded({
                 <a href={embed}></a>
             </blockquote>
             <script async src="https://platform.twitter.com/widgets.js"></script>
+        </div>
+    )
+}
+
+function LinkEmbeded({
+    link
+}: embedingProps){
+
+    return (
+        <div className=" max-w-xs" >
+            <a href={link} target="_blank" className="text-purple-600 px-2 hover:underline ">Click here to visit Link</a>
+        </div>
+    )
+}
+
+function DocumentEmbeded({
+    link
+}: embedingProps){
+
+    return (
+        <div className=" max-w-xs flex flex-col items-center" >
+            <iframe className="w-2/1 h-[300px] !object-contain scale-x-50" src={link + "?embedded=true"}>
+            </iframe>
+            <a className="text-sm border-1 border-gray-300 p-2 rounded-lg text-purple-600 bg-purple-200" href={link} target="_blank">Click here  to visit full Document</a>
         </div>
     )
 }

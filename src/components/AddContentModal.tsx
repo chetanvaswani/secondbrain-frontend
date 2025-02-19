@@ -125,7 +125,7 @@ export default function AddContentModal({
                     <option value="link">Link</option>
                 </select>
                 <InputBox title="Enter the title" name="title" maxLength={50} onChange={handleInputChange} />
-                <InputBox title="Enter your Link" name="link" maxLength={100} onChange={handleInputChange} />                  
+                <InputBox title="Enter your Link" name="link" maxLength={150} onChange={handleInputChange} />                  
                 <div className="flex justify-between gap-3">
                     <InputBox title="Enter a tag" id="tag-input" maxLength={50} onKeyDown={(e) => {
                         if(e.key === "Enter"){
