@@ -76,7 +76,7 @@ export default function Card({
                     </div>
                 : false
             }
-            <div className="w-full h-fit bg-white rounded-2xl border-1 border-gray-200 text-black p-4 flex flex-col gap-4" >
+            <div className="w-full h-full bg-white rounded-2xl border-1 border-gray-200 text-black p-4 flex flex-col gap-4" >
                 <div className="flex justify-between items-center">
                     <div className="flex items-center gap-3">
                         {cardType[type]}
@@ -172,10 +172,8 @@ function DocumentEmbeded({
 }: embedingProps){
 
     return (
-        <div className=" max-w-xs flex flex-col items-center" >
-            <iframe className="w-2/1 h-[300px] !object-contain scale-x-50" src={link + "?embedded=true"}>
-            </iframe>
-            <a className="text-sm border-1 border-gray-300 p-2 rounded-lg text-purple-600 bg-purple-200" href={link} target="_blank">Click here  to visit full Document</a>
+        <div className=" max-w-xs" >
+            <a href={link} target="_blank" className="text-purple-600 px-2 hover:underline ">Click here to visit Document</a>
         </div>
     )
 }

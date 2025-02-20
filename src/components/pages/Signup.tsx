@@ -2,7 +2,7 @@ import { LuBrain } from "react-icons/lu";
 import InputBox from "../InputBox";
 import Button from "../Button";
 import { useNavigate } from "react-router-dom";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import axios from "axios";
 
 export default function signup(){
@@ -15,7 +15,7 @@ export default function signup(){
         password: "",
         confirmation: ""
     });
-    const [disabled, setDisabled] = useState(false);
+    const [disabled, setDisabled] = useState(true);
     const [ buttonText, setButtonText ] = useState("Create an Account")
 
     const uppercaseWords = (str: string )=> str.replace(/^(.)|\s+(.)/g, c => c.toUpperCase());
@@ -28,6 +28,21 @@ export default function signup(){
         }, 250)
     };
 
+    useEffect(() => {
+        if ((formData.password === formData.confirmation) && formData.password.length > 0){
+            setDisabled(false)
+            if (alerDivtRef.current) {
+                alerDivtRef.current.innerText = "";
+            }
+        }
+        else if (!(formData.password === formData.confirmation) && formData.confirmation.length > 0){
+            setDisabled(true)
+            if (alerDivtRef.current) {
+                alerDivtRef.current.innerText = "Passwords Do Not Match";
+            }
+        }
+    }, [formData.password, formData.confirmation])
+
     const handleSignup = async () => {
         setDisabled(true)
         setButtonText("Creating an account for you...")
@@ -35,6 +50,7 @@ export default function signup(){
             if (alerDivtRef.current) {
                 alerDivtRef.current.innerText = "Passwords Do Not Match";
             }
+            setButtonText("Create an Account")
             setDisabled(false)
             return
         }
@@ -55,6 +71,8 @@ export default function signup(){
                 }, 1500)
             }
         }).catch((err) => {
+            setButtonText("Create an Account")
+            setDisabled(false)
             let msg: string;
              msg = "Invalid request"
             if (err.response.status === 403){
@@ -65,8 +83,6 @@ export default function signup(){
             if (alerDivtRef.current) {
                 alerDivtRef.current.innerText = `${uppercaseWords(msg)}. Please try again.`;
             }
-            setButtonText("Create an Account")
-            setDisabled(false)
         })
     }
 
